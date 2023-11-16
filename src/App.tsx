@@ -699,7 +699,7 @@ function App() {
   return (
     <div className="App">
       <div className="github-link">
-        <a href="https://github.com/yourusername/yourrepository" target="_blank" rel="noopener noreferrer">
+        <a href="https://github.com/GavinRay97/hunt-damage-calculator" target="_blank" rel="noreferrer">
           View on GitHub
         </a>
       </div>

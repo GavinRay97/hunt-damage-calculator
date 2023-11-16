@@ -19,7 +19,7 @@ jobs:
         run: |
           yarn install
           yarn build
-          touch ./out/.nojekyll
+          touch ./dist/.nojekyll
 
       - name: Deploy 🚀
         uses: JamesIves/github-pages-deploy-action@v4.2.5
