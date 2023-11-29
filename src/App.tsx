@@ -576,6 +576,7 @@ enum BodypartDamageModifier {
   HeadLong = 3.08,
   UpperChest = 1,
   Gut = 0.77,
+  Arms = 0.615,
   Legs = 0.538,
 }
 
@@ -834,6 +835,7 @@ enum SelectableBodypart {
   UpperChest = "Upper Chest",
   Gut = "Gut",
   Legs = "Legs",
+  Arms = "Arms",
 }
 
 function GunsThatCanKillInShotsAtDistance() {
@@ -987,6 +989,8 @@ function mapSelectedBodypartAndCurrentGunFlagsToModifier(
       return BodypartDamageModifier.UpperChest
     case SelectableBodypart.Gut:
       return BodypartDamageModifier.Gut
+    case SelectableBodypart.Arms:
+      return BodypartDamageModifier.Arms
     case SelectableBodypart.Legs:
       return BodypartDamageModifier.Legs
   }
