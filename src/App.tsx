@@ -1245,6 +1245,25 @@ function getPenetrationModifier(penetratedObject: keyof PenetrationData, variant
   })()
 }
 
+function ChartLegend({
+  chartHealthBreakpoints,
+}: {
+  chartHealthBreakpoints: Array<{ start: number; end: number; color: string }>
+}) {
+  return (
+    <div className="chart-legend">
+      {chartHealthBreakpoints.map((breakpoint, index) => (
+        <div key={index} className="legend-item">
+          <span className="legend-color" style={{ backgroundColor: breakpoint.color }}></span>
+          <span className="legend-text">
+            {breakpoint.start} - {breakpoint.end}
+          </span>
+        </div>
+      ))}
+    </div>
+  )
+}
+
 function DamageChart({
   maxDistance,
   chartDistanceIntervalMeters,
@@ -1287,50 +1306,53 @@ function DamageChart({
   const interval = chartDistanceIntervalMeters
 
   return (
-    <div className="chart-container">
-      <Line
-        width={800}
-        height={400}
-        data={{
-          labels: [...Array(maxDistance / interval + 1).keys()].map((i) => i * interval + `m`),
-          datasets: [
-            {
-              // label: `Damage to ${bodypartName}`,
-              data: damageAtDistances,
-              borderColor: "rgb(255, 99, 132)",
-              backgroundColor: "rgb(255, 99, 132)",
-              fill: false,
-              cubicInterpolationMode: "monotone",
-              tension: 1,
-              pointRadius: 2,
+    <>
+      <div className="chart-container">
+        <Line
+          width={800}
+          height={400}
+          data={{
+            labels: [...Array(maxDistance / interval + 1).keys()].map((i) => i * interval + `m`),
+            datasets: [
+              {
+                // label: `Damage to ${bodypartName}`,
+                data: damageAtDistances,
+                borderColor: "rgb(255, 99, 132)",
+                backgroundColor: "rgb(255, 99, 132)",
+                fill: false,
+                cubicInterpolationMode: "monotone",
+                tension: 1,
+                pointRadius: 2,
+              },
+            ],
+          }}
+          options={{
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: {
+                display: false,
+              },
+              title: {
+                display: true,
+                text: "Damage at Distance",
+                color: window.matchMedia("(prefers-color-scheme: dark)").matches ? "white" : "black",
+              },
+              annotation: {
+                annotations: healthBreakpointAnnotations,
+              },
             },
-          ],
-        }}
-        options={{
-          responsive: true,
-          maintainAspectRatio: false,
-          plugins: {
-            legend: {
-              display: false,
+            scales: {
+              y: {
+                min: 0,
+                max: maxDamage + 10,
+              },
             },
-            title: {
-              display: true,
-              text: "Damage at Distance",
-              color: window.matchMedia("(prefers-color-scheme: dark)").matches ? "white" : "black",
-            },
-            annotation: {
-              annotations: healthBreakpointAnnotations,
-            },
-          },
-          scales: {
-            y: {
-              min: 0,
-              max: maxDamage + 10,
-            },
-          },
-        }}
-      />
-    </div>
+          }}
+        />
+      </div>
+      <ChartLegend chartHealthBreakpoints={chartHealthBreakpoints} />
+    </>
   )
 }
 
