@@ -1,3 +1,22 @@
+const variantNames = [
+  "Precision",
+  "Deadeye",
+  "Marksman",
+  "Sniper",
+  "Bayonet",
+  "Riposte",
+  "Trauma",
+  "Striker",
+  "Brawler",
+  "Mace",
+  "Talon",
+  "Aperture",
+  "Swift",
+  "Match",
+  "Precision",
+  "Claw",
+]
+
 // Extract weapons from https://huntshowdown.rocks/en/weapons
 function extractWeaponInfo() {
   const weapons = document.querySelectorAll(".weapon")
@@ -6,24 +25,6 @@ function extractWeaponInfo() {
   weapons.forEach((weapon) => {
     const weaponName = weapon.querySelector(".weaponname")?.textContent.trim()
 
-    const variantNames = [
-      "Precision",
-      "Deadeye",
-      "Marksman",
-      "Sniper",
-      "Bayonet",
-      "Riposte",
-      "Trauma",
-      "Striker",
-      "Brawler",
-      "Mace",
-      "Talon",
-      "Aperture",
-      "Swift",
-      "Match",
-      "Precision",
-      "Claw",
-    ]
     if (variantNames.some((it) => weaponName?.includes(it))) return
 
     const damageElement = weapon.querySelector('.weaponTopLine[data-type="damage"]')
@@ -42,10 +43,9 @@ function extractWeaponInfo() {
     const isSilenced = weaponName?.includes("Silencer")
 
     // Check if it has an FMJ variant
-    const hasFMJ = imageEls.some((it) => {
-      console.log("Checking image", it.src)
-      return it.src.includes("fullmetaljacket")
-    })
+    const hasFMJ = imageEls.some((it) => it.src.includes("fullmetaljacket"))
+    const hasSpitzer = imageEls.some((it) => it.src.includes("spitzer"))
+    const hasDumDum = imageEls.some((it) => it.src.includes("dumdum"))
 
     weaponInfo.push({
       name: weaponName,
@@ -53,8 +53,17 @@ function extractWeaponInfo() {
       damage: damage,
       silenced: isSilenced,
       hasFMJ: hasFMJ,
+      hasSpitzer: hasSpitzer,
+      hasDumDum: hasDumDum,
     })
   })
 
   return weaponInfo
 }
+
+function main() {
+  const weapons = extractWeaponInfo()
+  console.table(weapons)
+}
+
+main()

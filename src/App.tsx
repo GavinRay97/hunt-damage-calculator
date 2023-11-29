@@ -579,81 +579,399 @@ enum BodypartDamageModifier {
   Legs = 0.538,
 }
 
-class Gun {
-  public name: string
-  public damage: number
-  public baseFlags: AmmoFlags
-  public variantFlags?: AmmoFlags
-  public currentFlags: AmmoFlags
+interface IGun {
+  name: string
+  damage: number
+  flags: AmmoFlags
+  variants?: AmmoFlags
+}
 
-  constructor(name: string, damage: number, baseFlags: AmmoFlags, variantFlags?: AmmoFlags) {
-    this.name = name
-    this.damage = damage
-    this.baseFlags = baseFlags
-    this.variantFlags = variantFlags
-    this.currentFlags = baseFlags
-  }
+// prettier-ignore
+const GUNS_NEW: IGun[] = [
+  { name: "Berthier MLE 1892",                 damage: 130,       flags: AmmoFlags.Long,                               variants: AmmoFlags.Spitzer                  },
+  { name: "Bornheim No. 3",                    damage:  74,       flags: AmmoFlags.Compact | AmmoFlags.Pistol,         variants: AmmoFlags.Silenced                 },
+  { name: "Caldwell 92 New Army",              damage:  97,       flags: AmmoFlags.Compact | AmmoFlags.Pistol,         variants: AmmoFlags.FMJ                      },
+  { name: "Caldwell Conversion Pistol",        damage: 104,       flags: AmmoFlags.Compact | AmmoFlags.Pistol,         variants: AmmoFlags.FMJ                      },
+  { name: "Caldwell Conversion Uppercut",      damage: 126,       flags: AmmoFlags.Long    | AmmoFlags.Pistol                                                       },
+  { name: "Caldwell Pax",                      damage: 110,       flags: AmmoFlags.Medium  | AmmoFlags.Pistol,         variants: AmmoFlags.FMJ                      },
+  { name: "Caldwell Rival 78",                 damage: 190,       flags: AmmoFlags.Shotgun                                                                          },
+  { name: "Caldwell Rival 78 Handcannon",      damage: 105,       flags: AmmoFlags.Shotgun                                                                          },
+  { name: "Crown & King Auto-5",               damage: 194,       flags: AmmoFlags.Shotgun                                                                          },
+  { name: "Drilling",                          damage: 120,       flags: AmmoFlags.Medium,                             variants: AmmoFlags.FMJ                      },
+  { name: "Lebel 1886",                        damage: 132,       flags: AmmoFlags.Long,                               variants: AmmoFlags.Spitzer                  },
+  { name: "LeMat Mark II Carbine",             damage: 107,       flags: AmmoFlags.Medium,                             variants: AmmoFlags.FMJ                      },
+  { name: "LeMat Mark II Revolver",            damage:  97,       flags: AmmoFlags.Medium  | AmmoFlags.Pistol,         variants: AmmoFlags.FMJ                      },
+  { name: "LeMat Mark II UpperMat",            damage: 120,       flags: AmmoFlags.Long    | AmmoFlags.Pistol,         variants: AmmoFlags.FMJ                      },
+  { name: "Martini-Henry IC1",                 damage: 143,       flags: AmmoFlags.Long,                               variants: AmmoFlags.FMJ                      },
+  { name: "Mosin-Nagant M1891",                damage: 136,       flags: AmmoFlags.Long,                               variants: AmmoFlags.Spitzer                  },
+  { name: "Mosin-Nagant M1891 Obrez",          damage: 133,       flags: AmmoFlags.Long,                               variants: AmmoFlags.Spitzer                  },
+  { name: "Nagant M1895",                      damage:  91,       flags: AmmoFlags.Compact | AmmoFlags.Pistol,         variants: AmmoFlags.Silenced                 },
+  { name: "Nagant M1895 Officer",              damage:  91,       flags: AmmoFlags.Compact | AmmoFlags.Pistol                                                       },
+  { name: "Nagant M1895 Officer Carbine",      damage: 104,       flags: AmmoFlags.Compact                                                                          },
+  { name: "Nitro Express Rifle",               damage: 364,       flags: AmmoFlags.Nitro                                                                            },
+  { name: "Romero 77",                         damage: 218,       flags: AmmoFlags.Shotgun                                                                          },
+  { name: "Romero 77 Handcannon",              damage: 145,       flags: AmmoFlags.Shotgun                                                                          },
+  { name: "Scottfield Model 3",                damage: 107,       flags: AmmoFlags.Medium  | AmmoFlags.Pistol,         variants: AmmoFlags.FMJ                      },
+  { name: "Sparks LRR",                        damage: 149,       flags: AmmoFlags.Long,                               variants: AmmoFlags.FMJ | AmmoFlags.Silenced },
+  { name: "Sparks LRR Pistol",                 damage: 149,       flags: AmmoFlags.Long    | AmmoFlags.Pistol,         variants: AmmoFlags.FMJ                      },
+  { name: "Specter 1882",                      damage: 210,       flags: AmmoFlags.Shotgun                                                                          },
+  { name: "Specter 1882 Compact",              damage: 113,       flags: AmmoFlags.Compact                                                                          },
+  { name: "Springfield 1866",                  damage: 132,       flags: AmmoFlags.Medium                                                                           },
+  { name: "Springfield 1866 Compact",          damage: 130,       flags: AmmoFlags.Medium                                                                           },
+  { name: "Springfield M1892 Krag",            damage: 124,       flags: AmmoFlags.Long,                               variants: AmmoFlags.FMJ                      },
+  { name: "Vetterli 71 Karabiner",             damage: 130,       flags: AmmoFlags.Medium,                             variants: AmmoFlags.FMJ | AmmoFlags.Silenced },
+  { name: "Vetterli 71 Karabiner Cyclone",     damage: 124,       flags: AmmoFlags.Medium,                             variants: AmmoFlags.FMJ                      },
+  { name: "Winfield 1887 Terminus",            damage: 190,       flags: AmmoFlags.Shotgun                                                                          },
+  { name: "Winfield 1887 Terminus Handcannon", damage: 105,       flags: AmmoFlags.Shotgun                                                                          },
+  { name: "Winfield 1893 Slate",               damage: 203,       flags: AmmoFlags.Shotgun                                                                          },
+  { name: "Winfield M1873",                    damage: 110,       flags: AmmoFlags.Compact,                            variants: AmmoFlags.FMJ                      },
+  { name: "Winfield M1873C",                   damage: 110,       flags: AmmoFlags.Compact,                            variants: AmmoFlags.FMJ | AmmoFlags.Silenced },
+  { name: "Winfield M1873C Vandal",            damage: 107,       flags: AmmoFlags.Compact,                            variants: AmmoFlags.FMJ                      },
+  { name: "Winfield M1876 Centennial",         damage: 123,       flags: AmmoFlags.Medium,                             variants: AmmoFlags.FMJ                      },
+  { name: "Winfield M1876 Centennial Shorty",  damage: 120,       flags: AmmoFlags.Medium,                             variants: AmmoFlags.FMJ | AmmoFlags.Silenced },
+]
 
-  public canEnableVariant(variant: AmmoFlags): boolean {
-    if (!this.variantFlags) {
+class IGunMethods {
+  public static canEnableVariant(gun: IGun, variant: AmmoFlags): boolean {
+    if (!gun.variants) {
       return false
     }
-    return (this.variantFlags & variant) === variant
+    return (gun.variants & variant) === variant
+  }
+
+  public static getDamageAtDistance(
+    gun: IGun,
+    variantFlags: AmmoFlags,
+    distance: number,
+    bodypartModifier: BodypartDamageModifier
+  ): number {
+    const flags = gun.flags | variantFlags
+    const ammoType = AMMO_FLAGS_TO_TYPE[flags]
+    const getDamageAtDistance = AMMO_TYPE_TO_DAMAGE_AT_DISTANCE[ammoType]
+    const damage = getDamageAtDistance(distance) * gun.damage * bodypartModifier
+    return Math.round(damage)
   }
 }
 
-const GUNS: Gun[] = [
-  new Gun("Berthier Mle 1892", 130, AmmoFlags.Long, AmmoFlags.Spitzer),
-  new Gun("Bornheim No. 3", 74, AmmoFlags.Compact | AmmoFlags.Pistol, AmmoFlags.Silenced),
-  new Gun("Caldwell 92 New Army", 97, AmmoFlags.Compact | AmmoFlags.Pistol, AmmoFlags.FMJ),
-  new Gun("Caldwell Conversion Pistol", 104, AmmoFlags.Compact | AmmoFlags.Pistol, AmmoFlags.FMJ),
-  new Gun("Caldwell Conversion Uppercut", 126, AmmoFlags.Long | AmmoFlags.Pistol),
-  new Gun("Caldwell Pax", 110, AmmoFlags.Medium | AmmoFlags.Pistol, AmmoFlags.FMJ),
-  new Gun("Caldwell Rival 78", 190, AmmoFlags.Shotgun),
-  new Gun("Caldwell Rival 78 Handcannon", 105, AmmoFlags.Shotgun),
-  new Gun("Crown & King Auto-5", 194, AmmoFlags.Shotgun),
-  new Gun("Drilling", 120, AmmoFlags.Medium, AmmoFlags.FMJ),
-  new Gun("Lebel 1886", 132, AmmoFlags.Long, AmmoFlags.Spitzer),
-  new Gun("LeMat Mark II Carbine", 107, AmmoFlags.Medium, AmmoFlags.FMJ),
-  new Gun("LeMat Mark II Revolver", 97, AmmoFlags.Medium | AmmoFlags.Pistol, AmmoFlags.FMJ),
-  new Gun("LeMat Mark II UpperMat", 120, AmmoFlags.Long | AmmoFlags.Pistol, AmmoFlags.FMJ),
-  new Gun("Martini-Henry IC1", 143, AmmoFlags.Long, AmmoFlags.FMJ),
-  new Gun("Mosin-Nagant M1891", 136, AmmoFlags.Long, AmmoFlags.Spitzer),
-  new Gun("Mosin-Nagant M1891 Obrez", 133, AmmoFlags.Long, AmmoFlags.Spitzer),
-  new Gun("Nagant M1895", 91, AmmoFlags.Compact | AmmoFlags.Pistol, AmmoFlags.Silenced),
-  new Gun("Nagant M1895 Officer", 91, AmmoFlags.Compact | AmmoFlags.Pistol),
-  new Gun("Nagant M1895 Officer Carbine", 104, AmmoFlags.Compact),
-  new Gun("Nitro Express Rifle", 364, AmmoFlags.Nitro),
-  new Gun("Romero 77", 218, AmmoFlags.Shotgun),
-  new Gun("Romero 77 Handcannon", 145, AmmoFlags.Shotgun),
-  new Gun("Scottfield Model 3", 107, AmmoFlags.Medium | AmmoFlags.Pistol, AmmoFlags.FMJ),
-  new Gun("Sparks LRR", 149, AmmoFlags.Long, AmmoFlags.FMJ | AmmoFlags.Silenced),
-  new Gun("Sparks LRR Pistol", 149, AmmoFlags.Long | AmmoFlags.Pistol, AmmoFlags.FMJ),
-  new Gun("Specter 1882", 210, AmmoFlags.Shotgun),
-  new Gun("Specter 1882 Compact", 113, AmmoFlags.Compact),
-  new Gun("Springfield 1866", 132, AmmoFlags.Medium),
-  new Gun("Springfield 1866 Compact", 130, AmmoFlags.Medium),
-  new Gun("Springfield M1892 Krag", 124, AmmoFlags.Long, AmmoFlags.FMJ),
-  new Gun("Vetterli 71 Karabiner", 130, AmmoFlags.Medium, AmmoFlags.FMJ | AmmoFlags.Silenced),
-  new Gun("Vetterli 71 Karabiner Cyclone", 124, AmmoFlags.Medium, AmmoFlags.FMJ),
-  new Gun("Winfield 1887 Terminus", 190, AmmoFlags.Shotgun),
-  new Gun("Winfield 1887 Terminus Handcannon", 105, AmmoFlags.Shotgun),
-  new Gun("Winfield 1893 Slate", 203, AmmoFlags.Shotgun),
-  new Gun("Winfield M1873", 110, AmmoFlags.Compact, AmmoFlags.FMJ),
-  new Gun("Winfield M1873C", 110, AmmoFlags.Compact, AmmoFlags.FMJ | AmmoFlags.Silenced),
-  new Gun("Winfield M1873C Vandal", 107, AmmoFlags.Compact, AmmoFlags.FMJ),
-  new Gun("Winfield M1876 Centennial", 123, AmmoFlags.Medium, AmmoFlags.FMJ),
-  new Gun("Winfield M1876 Centennial Shorty", 120, AmmoFlags.Medium, AmmoFlags.FMJ | AmmoFlags.Silenced),
-]
+interface PenetrationData {
+  None: 100
+  "1 Wooden Wall": number
+  "2 Wooden Walls": number
+  "3 Wooden Walls": number
+  "1 Metal wall": number
+  "1 Metal + 1 Wood": number
+  "2 Metal Walls": number
+  "4 Wooden Walls": number
+  "5 Wooden Walls": number
+  "6 Wooden Walls": number
+  "7 Wooden Walls": number
+  "Small Tree": number
+  "Large Tree": number
+  "1 Brick": number
+  "Thick Brick": number
+}
 
-const selectableBodyparts = ["Head", "Upper Chest", "Gut", "Legs"] as const
+const AMMO_FLAGS_TO_PENETRATION: Partial<Record<AmmoFlags, PenetrationData>> = {
+  [AmmoFlags.Shotgun]: {
+    None: 100,
+    "1 Wooden Wall": 100,
+    "2 Wooden Walls": 0,
+    "3 Wooden Walls": 0,
+    "1 Metal wall": 0,
+    "1 Metal + 1 Wood": 0,
+    "2 Metal Walls": 0,
+    "4 Wooden Walls": 0,
+    "5 Wooden Walls": 0,
+    "6 Wooden Walls": 0,
+    "7 Wooden Walls": 0,
+    "Small Tree": 0,
+    "Large Tree": 0,
+    "1 Brick": 0,
+    "Thick Brick": 0,
+  },
+  [AmmoFlags.Compact]: {
+    None: 100,
+    "1 Wooden Wall": 100,
+    "2 Wooden Walls": 40,
+    "3 Wooden Walls": 0,
+    "1 Metal wall": 0,
+    "1 Metal + 1 Wood": 0,
+    "2 Metal Walls": 0,
+    "4 Wooden Walls": 0,
+    "5 Wooden Walls": 0,
+    "6 Wooden Walls": 0,
+    "7 Wooden Walls": 0,
+    "Small Tree": 0,
+    "Large Tree": 0,
+    "1 Brick": 0,
+    "Thick Brick": 0,
+  },
+  [AmmoFlags.Compact | AmmoFlags.FMJ]: {
+    None: 100,
+    "1 Wooden Wall": 100,
+    "2 Wooden Walls": 100,
+    "3 Wooden Walls": 49,
+    "1 Metal wall": 100,
+    "1 Metal + 1 Wood": 49,
+    "2 Metal Walls": 49,
+    "4 Wooden Walls": 34,
+    "5 Wooden Walls": 0,
+    "6 Wooden Walls": 0,
+    "7 Wooden Walls": 0,
+    "Small Tree": 100,
+    "Large Tree": 0,
+    "1 Brick": 100,
+    "Thick Brick": 0,
+  },
+  [AmmoFlags.Medium]: {
+    None: 100,
+    "1 Wooden Wall": 100,
+    "2 Wooden Walls": 80,
+    "3 Wooden Walls": 0,
+    "1 Metal wall": 0,
+    "1 Metal + 1 Wood": 0,
+    "2 Metal Walls": 0,
+    "4 Wooden Walls": 0,
+    "5 Wooden Walls": 0,
+    "6 Wooden Walls": 0,
+    "7 Wooden Walls": 0,
+    "Small Tree": 0,
+    "Large Tree": 0,
+    "1 Brick": 0,
+    "Thick Brick": 0,
+  },
+  [AmmoFlags.Medium | AmmoFlags.FMJ]: {
+    None: 100,
+    "1 Wooden Wall": 100,
+    "2 Wooden Walls": 100,
+    "3 Wooden Walls": 89,
+    "1 Metal wall": 100,
+    "1 Metal + 1 Wood": 90,
+    "2 Metal Walls": 89,
+    "4 Wooden Walls": 65,
+    "5 Wooden Walls": 0,
+    "6 Wooden Walls": 0,
+    "7 Wooden Walls": 0,
+    "Small Tree": 100,
+    "Large Tree": 0,
+    "1 Brick": 100,
+    "Thick Brick": 0,
+  },
+  [AmmoFlags.Long]: {
+    None: 100,
+    "1 Wooden Wall": 100,
+    "2 Wooden Walls": 90,
+    "3 Wooden Walls": 49,
+    "1 Metal wall": 100,
+    "1 Metal + 1 Wood": 0,
+    "2 Metal Walls": 0,
+    "4 Wooden Walls": 0,
+    "5 Wooden Walls": 0,
+    "6 Wooden Walls": 0,
+    "7 Wooden Walls": 0,
+    "Small Tree": 100,
+    "Large Tree": 0,
+    "1 Brick": 100,
+    "Thick Brick": 0,
+  },
+  [AmmoFlags.Long | AmmoFlags.FMJ]: {
+    None: 100,
+    "1 Wooden Wall": 100,
+    "2 Wooden Walls": 100,
+    "3 Wooden Walls": 90,
+    "1 Metal wall": 100,
+    "1 Metal + 1 Wood": 90,
+    "2 Metal Walls": 90,
+    "4 Wooden Walls": 64,
+    "5 Wooden Walls": 50,
+    "6 Wooden Walls": 0,
+    "7 Wooden Walls": 0,
+    "Small Tree": 100,
+    "Large Tree": 0,
+    "1 Brick": 100,
+    "Thick Brick": 0,
+  },
+  [AmmoFlags.Long | AmmoFlags.Spitzer]: {
+    None: 100,
+    "1 Wooden Wall": 100,
+    "2 Wooden Walls": 100,
+    "3 Wooden Walls": 94,
+    "1 Metal wall": 100,
+    "1 Metal + 1 Wood": 94,
+    "2 Metal Walls": 94,
+    "4 Wooden Walls": 79,
+    "5 Wooden Walls": 64,
+    "6 Wooden Walls": 0,
+    "7 Wooden Walls": 0,
+    "Small Tree": 100,
+    "Large Tree": 0,
+    "1 Brick": 100,
+    "Thick Brick": 0,
+  },
+  [AmmoFlags.Nitro]: {
+    None: 100,
+    "1 Wooden Wall": 100,
+    "2 Wooden Walls": 100,
+    "3 Wooden Walls": 100,
+    "1 Metal wall": 48,
+    "1 Metal + 1 Wood": 24,
+    "2 Metal Walls": 43,
+    "4 Wooden Walls": 43,
+    "5 Wooden Walls": 21,
+    "6 Wooden Walls": 19,
+    "7 Wooden Walls": 9,
+    "Small Tree": 100,
+    "Large Tree": 100,
+    "1 Brick": 100,
+    "Thick Brick": 100,
+  },
+}
+
+const PENETRATION_NAMES = Object.keys(AMMO_FLAGS_TO_PENETRATION[AmmoFlags.Compact]!!) as (keyof PenetrationData)[]
+
+enum SelectableBodypart {
+  Head = "Head",
+  UpperChest = "Upper Chest",
+  Gut = "Gut",
+  Legs = "Legs",
+}
+
+function GunsThatCanKillInShotsAtDistance() {
+  const [distance, setDistance] = useState(50)
+  const [health, setHealth] = useState(125)
+  const [bodypart, setBodypart] = useState<SelectableBodypart>(SelectableBodypart.UpperChest)
+  const [penetratedObject, setPenetratedObject] = useState<keyof PenetrationData>("None")
+
+  const gunsThatCanKill = GUNS_NEW.flatMap((gun) => {
+    const baseFlags = gun.flags
+    const variantFlags = gun.variants ?? 0
+    const flagCombinations: AmmoFlags[] = [baseFlags]
+
+    // Generate all flag combinations
+    for (let flag = 1; flag <= variantFlags; flag <<= 1) {
+      if (variantFlags & flag) {
+        flagCombinations.push(...flagCombinations.map((f) => f | flag))
+      }
+    }
+
+    // Filter flag combinations that can kill in one shot
+    return flagCombinations.flatMap((combination) => {
+      const bodypartModifier = mapSelectedBodypartAndCurrentGunFlagsToModifier(bodypart, combination)
+      const damage = IGunMethods.getDamageAtDistance(gun, combination, distance, bodypartModifier)
+      const penetratedDamage = damage * getPenetrationModifier(penetratedObject, combination)
+      const shotsToKill = Math.ceil(health / penetratedDamage)
+      if (shotsToKill <= 1) {
+        return {
+          name: gun.name,
+          flags: AMMO_FLAGS_TO_TYPE[combination],
+          damage: damage,
+        }
+      }
+      return []
+    })
+  })
+
+  return (
+    <div className="guns-that-can-kill">
+      <div>
+        <label htmlFor="bodypart" style={{ marginBottom: 10 }}>
+          Bodypart:
+        </label>
+        <select
+          value={bodypart}
+          onChange={(e) => {
+            setBodypart(e.target.value as SelectableBodypart)
+          }}
+        >
+          {Object.entries(SelectableBodypart).map(([key, value]) => (
+            <option key={key} value={value}>
+              {value}
+            </option>
+          ))}
+        </select>
+      </div>
+
+      {(function PenetrationSelectList() {
+        return (
+          <div>
+            <label htmlFor="penetratedObject">Penetrated Object:</label>
+            <select
+              id="penetratedObject"
+              value={penetratedObject}
+              onChange={(e) => setPenetratedObject(e.target.value as keyof PenetrationData)}
+            >
+              {PENETRATION_NAMES.map((obj) => (
+                <option key={obj} value={obj}>
+                  {obj}
+                </option>
+              ))}
+            </select>
+          </div>
+        )
+      })()}
+
+      <div>
+        <label htmlFor="distance">Distance ({distance}):</label>
+        <input
+          id="distance"
+          type="range"
+          min={10}
+          max={200}
+          step={5}
+          value={distance}
+          onChange={(e) => setDistance(parseInt(e.target.value))}
+        />
+      </div>
+
+      <div>
+        <label htmlFor="health">Target Damage ({health}):</label>
+        <input
+          id="health"
+          type="range"
+          min={1}
+          max={150}
+          step={1}
+          value={health}
+          onChange={(e) => setHealth(parseInt(e.target.value))}
+        />
+      </div>
+
+      <h3>
+        Guns that can do{" "}
+        <span style={{ color: "#DA3F3D" }}>
+          <u>{health}</u>
+        </span>{" "}
+        damage at{" "}
+        <span style={{ color: "goldenrod" }}>
+          <u>{distance}m</u>
+        </span>{" "}
+        to the{" "}
+        <span style={{ color: "cornflowerblue" }}>
+          <u>{bodypart}</u>
+        </span>{" "}
+        through{" "}
+        <span style={{ color: "green" }}>
+          <u>{penetratedObject}</u>
+        </span>
+      </h3>
+
+      <ul>
+        {gunsThatCanKill.map((gun, index) => (
+          <li key={`${gun.name}-${index}`}>
+            {gun.name} <i>({gun.flags})</i> (<span style={{ color: "#DA3F3D" }}>{gun.damage}</span>)
+          </li>
+        ))}
+      </ul>
+    </div>
+  )
+}
 
 function mapSelectedBodypartAndCurrentGunFlagsToModifier(
-  selectedBodypart: (typeof selectableBodyparts)[number],
+  selectedBodypart: SelectableBodypart,
   currentFlags: AmmoFlags
 ): BodypartDamageModifier {
   switch (selectedBodypart) {
-    case "Head": {
+    case SelectableBodypart.Head: {
       switch (true) {
         case (currentFlags & AmmoFlags.Compact) === AmmoFlags.Compact:
           return BodypartDamageModifier.HeadCompact
@@ -665,25 +983,39 @@ function mapSelectedBodypartAndCurrentGunFlagsToModifier(
           throw new Error("Unreachable")
       }
     }
-    case "Upper Chest":
+    case SelectableBodypart.UpperChest:
       return BodypartDamageModifier.UpperChest
-    case "Gut":
+    case SelectableBodypart.Gut:
       return BodypartDamageModifier.Gut
-    case "Legs":
+    case SelectableBodypart.Legs:
       return BodypartDamageModifier.Legs
   }
 }
 
+function canEnableVariant(gun: IGun, variant: AmmoFlags): boolean {
+  if (!gun.variants) {
+    return false
+  }
+  return (gun.variants & variant) === variant
+}
+
+enum ViewType {
+  DamageGraph = "Damage Graph",
+  FindWeapon = "Find Weapon",
+}
+
 function App() {
   const [maxDistance, setMaxDistance] = useState(100)
-  const [bodypart, setBodypart] = useState<(typeof selectableBodyparts)[number]>("Upper Chest")
-  const [gun, setGun] = useState(GUNS[0])
-  const [variant, setVariant] = useState(gun.baseFlags)
+  const [bodypart, setBodypart] = useState<SelectableBodypart>(SelectableBodypart.UpperChest)
+  const [gun, setGun] = useState(GUNS_NEW[0])
+  const [variant, setVariant] = useState(gun.flags)
+  const [penetratedObject, setPenetratedObject] = useState<keyof PenetrationData>("None")
+  const [currentView, setCurrentView] = useState<ViewType>(ViewType.DamageGraph)
 
-  useEffect(() => setVariant(gun.baseFlags), [gun])
+  useEffect(() => setVariant(gun.flags), [gun])
   useEffect(() => {
     // If current gun is shotgun, set distance to 40
-    if (gun.baseFlags & AmmoFlags.Shotgun) {
+    if (gun.flags & AmmoFlags.Shotgun) {
       setMaxDistance(40)
     } else {
       // If we currently have a shotgun max distance, set it to 100 default
@@ -703,95 +1035,185 @@ function App() {
           View on GitHub
         </a>
       </div>
-      <header className="App-header">
-        <h1>Hunt: Showdown Damage Calculator</h1>
-        <div>
-          <label htmlFor="bodypart">Bodypart:</label>
-          <select
-            id="bodypart"
-            value={bodypart}
-            onChange={(e) => setBodypart(e.target.value as (typeof selectableBodyparts)[number])}
-          >
-            {selectableBodyparts.map((bp) => (
-              <option key={bp} value={bp}>
-                {bp}
-              </option>
-            ))}
-          </select>
-        </div>
-        <div>
-          <label htmlFor="gun">Gun:</label>
-          <select id="gun" value={gun.name} onChange={(e) => setGun(GUNS.find((g) => g.name === e.target.value)!)}>
-            {GUNS.map((g) => (
-              <option key={g.name} value={g.name}>
-                {g.name}
-              </option>
-            ))}
-          </select>
-        </div>
-        {/* Display checkbox to enable/disable variants like silenced and FMJ */}
-        {gun.variantFlags && (
-          <>
-            {gun.canEnableVariant(AmmoFlags.Silenced) && (
-              <div>
-                <label htmlFor="silenced">Silenced:</label>
-                <input
-                  id="silenced"
-                  type="checkbox"
-                  checked={variant & AmmoFlags.Silenced ? true : false}
-                  onChange={(e) => {
-                    setVariant(e.target.checked ? variant | AmmoFlags.Silenced : variant & ~AmmoFlags.Silenced)
-                  }}
-                />
-              </div>
-            )}
-            {gun.canEnableVariant(AmmoFlags.FMJ) && (
-              <div>
-                <label htmlFor="fmj">FMJ:</label>
-                <input
-                  id="fmj"
-                  type="checkbox"
-                  checked={variant & AmmoFlags.FMJ ? true : false}
-                  onChange={(e) => {
-                    setVariant(e.target.checked ? variant | AmmoFlags.FMJ : variant & ~AmmoFlags.FMJ)
-                  }}
-                />
-              </div>
-            )}
-          </>
-        )}
-        {/* Max Distance Slider */}
-        <div>
-          <label htmlFor="maxDistance">Max Distance: {maxDistance}m</label>
-          <input
-            id="maxDistance"
-            type="range"
-            min={10}
-            max={200}
-            step={5}
-            value={maxDistance}
-            onChange={(e) => setMaxDistance(parseInt(e.target.value))}
-          />
-        </div>
-      </header>
 
-      <DamageChart
-        gunDamage={gun.damage}
-        ammoType={AMMO_FLAGS_TO_TYPE[variant]}
-        bodypartModifier={bodypartModifier}
-        bodypartName={bodypart}
-        maxDistance={maxDistance}
-      />
+      <div className="select-mode">
+        <span>Select Mode:</span>
+        <br />
+        <button
+          className={`button ${currentView === ViewType.DamageGraph ? "button-active" : ""}`}
+          onClick={() => setCurrentView(ViewType.DamageGraph)}
+        >
+          Damage Graph
+        </button>
+        <button
+          className={`button ${currentView === ViewType.FindWeapon ? "button-active" : ""}`}
+          onClick={() => setCurrentView(ViewType.FindWeapon)}
+        >
+          Find Weapon
+        </button>
+      </div>
+
+      {(() => {
+        switch (currentView) {
+          case ViewType.DamageGraph:
+            return (
+              <>
+                <header className="App-header">
+                  <h1>Hunt: Showdown Damage Calculator</h1>
+
+                  <div>
+                    <label htmlFor="bodypart">Bodypart:</label>
+                    <select
+                      id="bodypart"
+                      value={bodypart}
+                      onChange={(e) => setBodypart(e.target.value as SelectableBodypart)}
+                    >
+                      {Object.entries(SelectableBodypart).map(([key, value]) => (
+                        <option key={key} value={value}>
+                          {value}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+
+                  <div>
+                    <label htmlFor="gun">Gun:</label>
+                    <select
+                      id="gun"
+                      value={gun.name}
+                      onChange={(e) => setGun(GUNS_NEW.find((g) => g.name === e.target.value)!)}
+                    >
+                      {GUNS_NEW.map((g) => (
+                        <option key={g.name} value={g.name}>
+                          {g.name}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+
+                  {(function PenetrationSelectList() {
+                    return (
+                      <div>
+                        <label htmlFor="penetratedObject">Penetrated Object:</label>
+                        <select
+                          id="penetratedObject"
+                          value={penetratedObject}
+                          onChange={(e) => setPenetratedObject(e.target.value as keyof PenetrationData)}
+                        >
+                          {PENETRATION_NAMES.map((obj) => (
+                            <option key={obj} value={obj}>
+                              {obj}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+                    )
+                  })()}
+
+                  {/* Display checkbox to enable/disable variants like silenced and FMJ */}
+                  {gun.variants && (
+                    <div className="checkbox-container">
+                      {canEnableVariant(gun, AmmoFlags.Silenced) && (
+                        <>
+                          <label className="checkbox-label" htmlFor="silenced">
+                            Silenced:
+                          </label>
+                          <input
+                            id="silenced"
+                            type="checkbox"
+                            checked={variant & AmmoFlags.Silenced ? true : false}
+                            onChange={(e) => {
+                              setVariant(
+                                e.target.checked ? variant | AmmoFlags.Silenced : variant & ~AmmoFlags.Silenced
+                              )
+                            }}
+                          />
+                        </>
+                      )}
+                      {canEnableVariant(gun, AmmoFlags.FMJ) && (
+                        <>
+                          <label className="checkbox-label" htmlFor="fmj">
+                            FMJ:
+                          </label>
+                          <input
+                            id="fmj"
+                            type="checkbox"
+                            checked={variant & AmmoFlags.FMJ ? true : false}
+                            onChange={(e) => {
+                              setVariant(e.target.checked ? variant | AmmoFlags.FMJ : variant & ~AmmoFlags.FMJ)
+                            }}
+                          />
+                        </>
+                      )}
+                    </div>
+                  )}
+                  {/* Max Distance Slider */}
+                  <div>
+                    <label htmlFor="maxDistance">Max Distance: {maxDistance}m</label>
+                    <input
+                      id="maxDistance"
+                      type="range"
+                      min={10}
+                      max={200}
+                      step={5}
+                      value={maxDistance}
+                      onChange={(e) => setMaxDistance(parseInt(e.target.value))}
+                    />
+                  </div>
+                </header>
+
+                <DamageChart
+                  maxDistance={maxDistance}
+                  chartDistanceIntervalMeters={(gun.flags & AmmoFlags.Shotgun) == AmmoFlags.Shotgun ? 1 : 5}
+                  damageAtDistances={(() => {
+                    const ammoType = AMMO_FLAGS_TO_TYPE[variant]
+                    const getDamageAtDistance = AMMO_TYPE_TO_DAMAGE_AT_DISTANCE[ammoType]
+                    const penetrationModifier = getPenetrationModifier(penetratedObject, variant)
+
+                    console.log("Gun", gun.name, "Ammo Type", ammoType, "Penetration Modifier", penetrationModifier)
+
+                    const interval = (gun.flags & AmmoFlags.Shotgun) == AmmoFlags.Shotgun ? 1 : 5
+                    const damageAtDistances = [] as number[]
+                    for (let i = 0; i <= maxDistance; i += interval) {
+                      const dmg = gun.damage * getDamageAtDistance(i) * bodypartModifier
+                      const penetratedDmg = Math.round(dmg * penetrationModifier)
+                      damageAtDistances.push(Math.round(penetratedDmg))
+                    }
+
+                    return damageAtDistances
+                  })()}
+                  chartHealthBreakpoints={[
+                    // Red
+                    { start: 1000, end: 150, color: "rgba(255, 0, 0, 0.2)" },
+                    // Vibrant Orange
+                    { start: 149, end: 125, color: "rgba(255, 140, 0, 0.2)" },
+                    // Vibrant Yellow
+                    { start: 124, end: 75, color: "rgba(255, 255, 0, 0.2)" },
+                    // Vibrant Green
+                    { start: 74, end: 0, color: "rgba(0, 255, 0, 0.2)" },
+                  ]}
+                />
+              </>
+            )
+          case ViewType.FindWeapon:
+            return (
+              <header className="App-header">
+                <GunsThatCanKillInShotsAtDistance />
+              </header>
+            )
+        }
+      })()}
 
       <footer className="credits">
         <p>Developed by Gavin Ray</p>
         <p>
           Damage Formulas credit: &nbsp;{" "}
-          <a
-            href="https://hunt-tools.de/damage-calculator"
-            style={{ color: window.matchMedia("(prefers-color-scheme: dark)").matches ? "white" : "black" }}
-          >
-            https://hunt-tools.de/damage-calculator
+          <a href="https://hunt-tools.de/damage-calculator">https://hunt-tools.de/damage-calculator</a>
+        </p>
+        <p>
+          Penetration Data credit: &nbsp;{" "}
+          <a href="https://docs.google.com/spreadsheets/d/193PJptYUsa-62oUAv1kO9d4Yj69_kJItfjRSK383vl8/edit#gid=0">
+            Cornf's Penetration Spreadsheet
           </a>
         </p>
       </footer>
@@ -799,57 +1221,52 @@ function App() {
   )
 }
 
-// Render a Chart.js chart that shows the damage of the selected gun over a distance range
+function getPenetrationModifier(penetratedObject: keyof PenetrationData, variant: AmmoFlags) {
+  return (() => {
+    if (!penetratedObject) {
+      return 1
+    }
+
+    const penetration = AMMO_FLAGS_TO_PENETRATION[variant]
+    if (!penetration) {
+      return 1
+    }
+
+    const penetrationValue = penetration[penetratedObject]
+    if (penetrationValue == null || penetrationValue == undefined) {
+      return 1
+    }
+
+    return penetrationValue / 100
+  })()
+}
+
 function DamageChart({
-  gunDamage,
-  ammoType,
-  bodypartModifier,
-  bodypartName,
   maxDistance,
+  chartDistanceIntervalMeters,
+  damageAtDistances,
+  chartHealthBreakpoints,
 }: {
-  gunDamage: number
-  ammoType: AmmoTypeName
-  bodypartModifier: BodypartDamageModifier
-  bodypartName: string
   maxDistance: number
+  chartDistanceIntervalMeters: number
+  damageAtDistances: number[]
+  chartHealthBreakpoints: Array<{ start: number; end: number; color: string }>
 }) {
-  // If this gun is a Shotgun, we want to plot the damage at 1m intervals
-  // Otherwise, plot the damage at 5m intervals
-  const interval = ammoType === AmmoTypeName.Shotgun ? 1 : 5
+  const maxDamage = Math.max(...damageAtDistances)
 
-  const getDamageAtDistance = AMMO_TYPE_TO_DAMAGE_AT_DISTANCE[ammoType]
-
-  const damageAtDistanceData = [] as number[]
-  for (let i = 0; i <= maxDistance; i += interval) {
-    const dmg = gunDamage * getDamageAtDistance(i) * bodypartModifier
-    damageAtDistanceData.push(Math.round(dmg))
-  }
-
-  // The color of the line at various points should represent the number of shots needed to kill a 150 health hunter
-  // Use Chart.js plugin annotation to draw boxes that span the distance range for each color
-  let healthBreakpointAnnotations: AnnotationOptions[] = []
-  const healthBreakpointsWithColor = [
-    // Red
-    { start: 1000, end: 150, color: "rgba(255, 0, 0, 0.2)" },
-    // Vibrant Orange
-    { start: 149, end: 125, color: "rgba(255, 140, 0, 0.2)" },
-    // Vibrant Yellow
-    { start: 124, end: 75, color: "rgba(255, 255, 0, 0.2)" },
-    // Vibrant Green
-    { start: 74, end: 0, color: "rgba(0, 255, 0, 0.2)" },
-  ] as const
+  const healthBreakpointAnnotations = [] as AnnotationOptions[]
 
   // Find the bounds of the color for each breakpoint
-  for (const { start, end, color } of healthBreakpointsWithColor) {
+  for (const { start, end, color } of chartHealthBreakpoints) {
     // Find the first distance where the damage is less than the start
     let startIndex = 0
-    while (damageAtDistanceData[startIndex] > start) {
+    while (damageAtDistances[startIndex] > start) {
       startIndex++
     }
 
     // Find the last distance where the damage is less than the end
     let endIndex = startIndex
-    while (damageAtDistanceData[endIndex] > end) {
+    while (damageAtDistances[endIndex] > end) {
       endIndex++
     }
 
@@ -858,10 +1275,12 @@ function DamageChart({
       xMin: startIndex,
       xMax: endIndex,
       yMin: 0,
-      yMax: gunDamage + 10,
+      yMax: maxDamage + 10,
       backgroundColor: color,
     })
   }
+
+  const interval = chartDistanceIntervalMeters
 
   return (
     <div className="chart-container">
@@ -872,8 +1291,8 @@ function DamageChart({
           labels: [...Array(maxDistance / interval + 1).keys()].map((i) => i * interval + `m`),
           datasets: [
             {
-              label: `Damage to ${bodypartName}`,
-              data: damageAtDistanceData,
+              // label: `Damage to ${bodypartName}`,
+              data: damageAtDistances,
               borderColor: "rgb(255, 99, 132)",
               backgroundColor: "rgb(255, 99, 132)",
               fill: false,
@@ -902,7 +1321,7 @@ function DamageChart({
           scales: {
             y: {
               min: 0,
-              max: gunDamage + 10,
+              max: maxDamage + 10,
             },
           },
         }}
