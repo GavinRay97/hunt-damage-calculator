@@ -672,6 +672,188 @@ interface PenetrationData {
   "Thick Brick": number
 }
 
+function hasFlag(flags: AmmoFlags, flag: AmmoFlags): boolean {
+  return (flags & flag) === flag
+}
+
+function getPenetrationForAmmoFlags(flags: AmmoFlags): PenetrationData {
+  switch (true) {
+    case hasFlag(flags, AmmoFlags.Shotgun):
+      return {
+        None: 100,
+        "1 Wooden Wall": 100,
+        "2 Wooden Walls": 0,
+        "3 Wooden Walls": 0,
+        "1 Metal wall": 0,
+        "1 Metal + 1 Wood": 0,
+        "2 Metal Walls": 0,
+        "4 Wooden Walls": 0,
+        "5 Wooden Walls": 0,
+        "6 Wooden Walls": 0,
+        "7 Wooden Walls": 0,
+        "Small Tree": 0,
+        "Large Tree": 0,
+        "1 Brick": 0,
+        "Thick Brick": 0,
+      }
+
+    case hasFlag(flags, AmmoFlags.Nitro):
+      return {
+        None: 100,
+        "1 Wooden Wall": 100,
+        "2 Wooden Walls": 100,
+        "3 Wooden Walls": 100,
+        "1 Metal wall": 48,
+        "1 Metal + 1 Wood": 24,
+        "2 Metal Walls": 43,
+        "4 Wooden Walls": 43,
+        "5 Wooden Walls": 21,
+        "6 Wooden Walls": 19,
+        "7 Wooden Walls": 9,
+        "Small Tree": 100,
+        "Large Tree": 100,
+        "1 Brick": 100,
+        "Thick Brick": 100,
+      }
+
+    case hasFlag(flags, AmmoFlags.Compact | AmmoFlags.FMJ):
+      return {
+        None: 100,
+        "1 Wooden Wall": 100,
+        "2 Wooden Walls": 100,
+        "3 Wooden Walls": 49,
+        "1 Metal wall": 100,
+        "1 Metal + 1 Wood": 49,
+        "2 Metal Walls": 49,
+        "4 Wooden Walls": 34,
+        "5 Wooden Walls": 0,
+        "6 Wooden Walls": 0,
+        "7 Wooden Walls": 0,
+        "Small Tree": 100,
+        "Large Tree": 0,
+        "1 Brick": 100,
+        "Thick Brick": 0,
+      }
+
+    case hasFlag(flags, AmmoFlags.Medium | AmmoFlags.FMJ):
+      return {
+        None: 100,
+        "1 Wooden Wall": 100,
+        "2 Wooden Walls": 100,
+        "3 Wooden Walls": 89,
+        "1 Metal wall": 100,
+        "1 Metal + 1 Wood": 90,
+        "2 Metal Walls": 89,
+        "4 Wooden Walls": 65,
+        "5 Wooden Walls": 0,
+        "6 Wooden Walls": 0,
+        "7 Wooden Walls": 0,
+        "Small Tree": 100,
+        "Large Tree": 0,
+        "1 Brick": 100,
+        "Thick Brick": 0,
+      }
+
+    case hasFlag(flags, AmmoFlags.Long | AmmoFlags.FMJ):
+      return {
+        None: 100,
+        "1 Wooden Wall": 100,
+        "2 Wooden Walls": 100,
+        "3 Wooden Walls": 90,
+        "1 Metal wall": 100,
+        "1 Metal + 1 Wood": 90,
+        "2 Metal Walls": 90,
+        "4 Wooden Walls": 64,
+        "5 Wooden Walls": 50,
+        "6 Wooden Walls": 0,
+        "7 Wooden Walls": 0,
+        "Small Tree": 100,
+        "Large Tree": 0,
+        "1 Brick": 100,
+        "Thick Brick": 0,
+      }
+
+    case hasFlag(flags, AmmoFlags.Long | AmmoFlags.Spitzer):
+      return {
+        None: 100,
+        "1 Wooden Wall": 100,
+        "2 Wooden Walls": 100,
+        "3 Wooden Walls": 94,
+        "1 Metal wall": 100,
+        "1 Metal + 1 Wood": 94,
+        "2 Metal Walls": 94,
+        "4 Wooden Walls": 79,
+        "5 Wooden Walls": 64,
+        "6 Wooden Walls": 0,
+        "7 Wooden Walls": 0,
+        "Small Tree": 100,
+        "Large Tree": 0,
+        "1 Brick": 100,
+        "Thick Brick": 0,
+      }
+
+    case hasFlag(flags, AmmoFlags.Compact):
+      return {
+        None: 100,
+        "1 Wooden Wall": 100,
+        "2 Wooden Walls": 40,
+        "3 Wooden Walls": 0,
+        "1 Metal wall": 0,
+        "1 Metal + 1 Wood": 0,
+        "2 Metal Walls": 0,
+        "4 Wooden Walls": 0,
+        "5 Wooden Walls": 0,
+        "6 Wooden Walls": 0,
+        "7 Wooden Walls": 0,
+        "Small Tree": 0,
+        "Large Tree": 0,
+        "1 Brick": 0,
+        "Thick Brick": 0,
+      }
+
+    case hasFlag(flags, AmmoFlags.Medium):
+      return {
+        None: 100,
+        "1 Wooden Wall": 100,
+        "2 Wooden Walls": 80,
+        "3 Wooden Walls": 0,
+        "1 Metal wall": 0,
+        "1 Metal + 1 Wood": 0,
+        "2 Metal Walls": 0,
+        "4 Wooden Walls": 0,
+        "5 Wooden Walls": 0,
+        "6 Wooden Walls": 0,
+        "7 Wooden Walls": 0,
+        "Small Tree": 0,
+        "Large Tree": 0,
+        "1 Brick": 0,
+        "Thick Brick": 0,
+      }
+
+    case hasFlag(flags, AmmoFlags.Long):
+      return {
+        None: 100,
+        "1 Wooden Wall": 100,
+        "2 Wooden Walls": 90,
+        "3 Wooden Walls": 49,
+        "1 Metal wall": 100,
+        "1 Metal + 1 Wood": 0,
+        "2 Metal Walls": 0,
+        "4 Wooden Walls": 0,
+        "5 Wooden Walls": 0,
+        "6 Wooden Walls": 0,
+        "7 Wooden Walls": 0,
+        "Small Tree": 100,
+        "Large Tree": 0,
+        "1 Brick": 100,
+        "Thick Brick": 0,
+      }
+
+    default:
+      throw new Error("No penetration data for ammo flags " + flags)
+  }
+}
+
 const AMMO_FLAGS_TO_PENETRATION: Partial<Record<AmmoFlags, PenetrationData>> = {
   [AmmoFlags.Shotgun]: {
     None: 100,
@@ -1231,7 +1413,7 @@ function getPenetrationModifier(penetratedObject: keyof PenetrationData, variant
       return 1
     }
 
-    const penetration = AMMO_FLAGS_TO_PENETRATION[variant]
+    const penetration = getPenetrationForAmmoFlags(variant)
     if (!penetration) {
       return 1
     }
